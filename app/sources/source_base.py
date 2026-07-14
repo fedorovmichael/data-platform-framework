@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
-from typing import Any
+from typing import Generic, TypeVar 
 
-Record = dict[str, Any]
-
-class SourceBase(ABC):
+T = TypeVar("T")
+class Source(ABC, Generic[T]):
     @abstractmethod
-    def read(self) -> Iterable[Record]:
+    def read(self) -> T:
         pass
