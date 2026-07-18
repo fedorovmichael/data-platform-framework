@@ -1,0 +1,28 @@
+{
+  "name": "orders_pipeline",
+  "enabled": true,
+  "runtime": {
+    "type": "spark",
+    "options": {
+      "app_name": "orders-processing",
+      "master": "local[*]"
+    }
+  },
+  "source": {
+    "type": "csv",
+    "options": {
+      "path": "data/input/orders.csv",
+      "header": true,
+      "infer_schema": true
+    }
+  },
+  "validators": [],
+  "transformations": [],
+  "sink": {
+    "type": "parquet",
+    "options": {
+      "path": "data/output/orders",
+      "mode": "overwrite"
+    }
+  }
+}
