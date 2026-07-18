@@ -10,7 +10,7 @@ def load_pipeline_configs(
 ) -> dict[str, dict[str, Any]]:
     if not pipelines_dir.exists():
         raise FileNotFoundError(
-            f"Configuration directtory does not exist: {pipelines_dir}"
+            f"Configuration directory does not exist: {pipelines_dir}"
         )
 
     if not pipelines_dir.is_dir():
@@ -30,6 +30,9 @@ def load_pipeline_configs(
                 f"Configuration file '{config_path.name}' "
                 "must contain a non-empty string field 'name'"
             )
+
+        pipeline_name = pipeline_name.strip()
+        config_data["name"] = pipeline_name
 
         if pipeline_name in pipeline_configs:
             raise ValueError(
@@ -54,7 +57,7 @@ def _load_json_file(config_path: Path) -> dict[str, Any]:
 
     if not isinstance(config_data, dict):
         raise ValueError(
-            f"Configuration root in '{config_path}' must be a JSON object."
+            f"Configuration root in '{config_path.name}' must be a JSON object."
         )
 
     return config_data
