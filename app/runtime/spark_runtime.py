@@ -3,12 +3,14 @@ from pyspark.sql import SparkSession
 
 class SparkRuntime(Runtime):
     def __init__(self):
-        self.spark = None
+        self.spark: SparkSession | None = None
 
-    def start(self, app_name:str = "SparkRuntime") -> SparkSession:
+    def start(self, app_name:str = "SparkRuntime", master: str = "local[*]") -> SparkSession:
         self.spark = SparkSession.builder.appName(app_name).getOrCreate()
         return self.spark
 
     
-    def stop(self):
-        self.spark.stop()
+    def stop(self) -> None:
+        if self.spark is not None:
+            self.spark.stop()
+            self.start = None
