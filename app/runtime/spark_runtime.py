@@ -13,4 +13,4 @@ class SparkRuntime(Runtime):
     def stop(self) -> None:
         if self.spark is not None:
             self.spark.stop()
-            self.start = None
+            self.spark = None
