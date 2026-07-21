@@ -1,4 +1,4 @@
-from app.runtime.runtime import Runtime
+from app.runtime.runtime_base import Runtime
 from pyspark.sql import SparkSession
 
 class SparkRuntime(Runtime):
