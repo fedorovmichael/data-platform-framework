@@ -59,3 +59,23 @@ def test_load_multiple_pipelines(tmp_path):
     assert "users_pipeline" in result
     assert result["orders_pipeline"]["name"] == "orders_pipeline"
     assert result["users_pipeline"]["name"] == "users_pipeline"
+
+
+def test_pipeline_config_missing_name(tmp_path):
+    users_pipeline_config = {
+        "runtime": {"type": "spark"},
+        "source": {"type": "csv"},
+        "validators": [],
+        "transformations": [],
+        "sink": {"type": "parquet"},
+    }
+
+    (tmp_path / "test_pipeline_config_missing_name.json").write_text(
+        json.dumps(users_pipeline_config),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="name"):
+        load_pipeline_configs(tmp_path)        
+
+
