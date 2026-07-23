@@ -4,13 +4,12 @@ from collections.abc import Sequence
 
 
 class SelectColumnsTransform(Transformer[DataFrame, DataFrame]):
-    def __init__(self, columns: Sequence[str]):
+    def __init__(self, columns: Sequence[str]) -> None:
 
-        if columns is None or len(columns) == 0:
-            raise ValueError("Columns can not be empty.")
+        if not columns:
+            raise ValueError("Columns cannot be empty.")
 
         self._columns = tuple(columns)
 
     def transform(self, data: DataFrame) -> DataFrame:
-        df = data.select(*self._columns)
-        return df
+        return data.select(*self._columns)
