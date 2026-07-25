@@ -9,7 +9,6 @@ TIn = TypeVar("TIn")
 TOut = TypeVar("TOut")
 
 
-
 class Pipeline(Generic[TIn, TOut]):
     def __init__(
         self,
