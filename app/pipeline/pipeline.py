@@ -5,17 +5,19 @@ from app.validators.validator_base import Validator, ValidationResult
 from app.transformers.transform_base import Transformer
 from app.sinks.sink_base import Sink
 
-T = TypeVar("T")
+TIn = TypeVar("TIn")
+TOut = TypeVar("TOut")
 
 
-class Pipeline(Generic[T]):
+
+class Pipeline(Generic[TIn, TOut]):
     def __init__(
         self,
-        source: Source[T],
-        validator: Validator[T],
-        transformer: Transformer[T],
-        sink: Sink[T],
-    ):
+        source: Source[TIn],
+        validator: Validator[TIn],
+        transformer: Transformer[TIn, TOut],
+        sink: Sink[TOut],
+    ) -> None:
         self.source = source
         self.validator = validator
         self.transformer = transformer
