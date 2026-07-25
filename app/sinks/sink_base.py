@@ -9,5 +9,5 @@ class Sink(ABC, Generic[T]):
 
     @abstractmethod
     def write(self, data: T) -> None:
-        """Sink data to the target."""
+        """Persist data to the configured destination."""
         ...
