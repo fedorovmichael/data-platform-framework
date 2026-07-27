@@ -34,6 +34,19 @@ def load_pipeline_configs(
         pipeline_name = pipeline_name.strip()
         config_data["name"] = pipeline_name
 
+        enabled = config_data.get("enabled", True)
+
+        if not isinstance(enabled, bool):
+            raise ValueError(
+                f"Configuration file '{config_path.name}' "
+                "field 'enabled' must be a boolean"
+            )
+
+        if not enabled:
+            continue
+
+        config_data["enabled"] = enabled
+
         if pipeline_name in pipeline_configs:
             raise ValueError(
                 f"Duplicate pipeline name '{pipeline_name}' "

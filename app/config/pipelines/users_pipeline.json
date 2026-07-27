@@ -1,0 +1,8 @@
+{
+  "runtime": { "type": "spark" },
+  "enabled": true,
+  "source": { "type": "csv" },
+  "validators": [{ "type": "schema" }, { "type": "null_check" }],
+  "transformations": [{ "type": "rename_columns" }],
+  "sink": { "type": "parquet" }
+}
