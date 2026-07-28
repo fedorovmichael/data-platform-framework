@@ -1,8 +1,18 @@
 {
+  "name": "user_pipeline",
   "runtime": { "type": "spark" },
   "enabled": true,
-  "source": { "type": "csv" },
+  "source": { "type": "csv",
+    "options": {
+      "path": "data/input/orders.csv"
+    }
+ },
   "validators": [{ "type": "schema" }, { "type": "null_check" }],
   "transformations": [{ "type": "rename_columns" }],
-  "sink": { "type": "parquet" }
+  "sink": {
+    "type": "parquet",
+    "options": {
+      "path": "data/output/orders.parquet"
+    }
+  }
 }
