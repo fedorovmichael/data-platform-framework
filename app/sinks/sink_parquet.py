@@ -3,11 +3,11 @@ from pyspark.sql import DataFrame
 
 
 class SinkParquet(Sink[DataFrame]):
-    def __init__(self, parquet_path: str) -> None:
-        if not parquet_path:
-            raise ValueError(f"Parquet save path does not valid.")
+    def __init__(self, path: str) -> None:
+        if not isinstance(path, str) or not path.strip():
+            raise ValueError(f"Parquet output path must be a non-empty string.")
 
-        self.parquet_path = parquet_path
+        self.path = path
 
     def write(self, data: DataFrame) -> None:
-        data.write.parquet(self.parquet_path)
+        data.write.parquet(self.path)
