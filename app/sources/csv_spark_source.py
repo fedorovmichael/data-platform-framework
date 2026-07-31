@@ -1,19 +1,21 @@
 from app.sources.source_base import Source
 from pyspark.sql import SparkSession, DataFrame
+from pathlib import Path
+from app.runtime.spark_runtime import SparkRuntime
 
 
 class CsvSparkSource(Source[DataFrame]):
-    def __init__(self, spark: SparkSession, csv_path: str) -> None:
-        if spark is None:
-            raise ValueError("SparkSession is required.")
+    def __init__(self, path: str) -> None:
 
-        if csv_path is None:
+        if path is None:
             raise ValueError("CSV path is required.")
 
-        self.spark = spark
-        self.csv_path = csv_path
+        spark = SparkRuntime()
+        self.spark = spark.start()
+
+        self.csv_path = Path(__file__).parent.parent.parent / path
 
     def read(self) -> DataFrame:
-
-        df = self.spark.read.csv(self.csv_path, header=True, inferSchema=True)
+        path = str(self.csv_path)
+        df = self.spark.read.csv(path, header=True, inferSchema=True)
         return df

@@ -11,21 +11,24 @@ from app.registry import (
     TRANSFORMER_REGISTRY,
 )
 
+
 class Components(Enum):
-    SOURCE = "source",
-    VALIDATOR = "validator",
-    TRANSFORMER = "transformer",
+    SOURCE = "source"
+    VALIDATOR = "validator"
+    TRANSFORMER = "transformer"
     SINK = "sink"
 
 
 T = TypeVar("T")
+
+
 class PipelineBuilder:
     @staticmethod
     def _build_component(
         component_config: dict[str, Any],
         registry: Mapping[str, type[T]],
         component_name: str,
-    )-> T:
+    ) -> T:
         component_type = component_config.get("type")
         if not isinstance(component_type, str) or not component_type:
             raise ValueError(
@@ -34,46 +37,27 @@ class PipelineBuilder:
 
         component_class = registry.get(component_type)
         if component_class is None:
-            raise ValueError(
-                f"Unknown {component_name} type '{component_type}'."
-            )
+            raise ValueError(f"Unknown {component_name} type '{component_type}'.")
 
         options = component_config.get("options", {})
         if not isinstance(options, dict):
-            raise ValueError(
-                f"{component_name} options must be an object."
-            )
+            raise ValueError(f"{component_name} options must be an object.")
 
         return component_class(**options)
 
     def build(self, config: dict[str, Any]) -> Pipeline:
-        source = self._build_component(
-            config[Components.SOURCE],
-            SOURCE_REGISTRY,
-            Components.SOURCE
-        )
+        source = self._build_component(config["source"], SOURCE_REGISTRY, "source")
 
         validator = self._build_component(
-            config[Components.VALIDATOR],
-            VALIDATOR_REGISTRY,
-            Components.VALIDATOR
+            config["validator"], VALIDATOR_REGISTRY, "validator"
         )
 
         transformer = self._build_component(
-            config[Components.TRANSFORMER],
-            TRANSFORMER_REGISTRY,
-            Components.TRANSFORMER
+            config["transformation"], TRANSFORMER_REGISTRY, "transformation"
         )
 
-        sink = self._build_component(
-            config[Components.SINK],
-            SINK_REGISTRY,
-            Components.SINK
-        )
+        sink = self._build_component(config["sink"], SINK_REGISTRY, "sink")
 
         return Pipeline(
-            source=source,
-            validator=validator,
-            transformer=transformer,
-            sink=sink
+            source=source, validator=validator, transformer=transformer, sink=sink
         )

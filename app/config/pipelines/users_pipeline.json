@@ -3,17 +3,17 @@
   "runtime": { "type": "spark" },
   "enabled": true,
   "source": {
-    "type": "csv",
+    "type": "csv_spark",
     "options": {
-      "path": "data/input/orders.csv"
+      "path": "data/users.csv"
     }
   },
-  "validators": [{ "type": "null_check" }],
-  "transformations": [{ "type": "rename_columns" }],
+  "validator": { "type": "spark_username_null_empty" },
+  "transformation": { "type": "spark_upper_username" },
   "sink": {
     "type": "parquet",
     "options": {
-      "path": "data/output/orders.parquet"
+      "path": "data/output/users.parquet"
     }
   }
 }

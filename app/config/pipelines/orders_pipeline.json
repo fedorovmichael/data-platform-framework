@@ -1,6 +1,6 @@
 {
   "name": "orders_pipeline",
-  "enabled": true,
+  "enabled": false,
   "runtime": {
     "type": "spark",
     "options": {
