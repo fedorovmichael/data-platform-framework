@@ -11,14 +11,6 @@ from app.registry import (
     TRANSFORMER_REGISTRY,
 )
 
-
-class Components(Enum):
-    SOURCE = "source"
-    VALIDATOR = "validator"
-    TRANSFORMER = "transformer"
-    SINK = "sink"
-
-
 T = TypeVar("T")
 
 

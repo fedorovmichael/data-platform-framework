@@ -12,7 +12,7 @@ class ValidationResult:
 
     @classmethod
     def ok(cls) -> "ValidationResult":
-        return cls(is_valid=True)
+        return cls(is_valid=True, errors=[])
 
     @classmethod
     def fail(cls, *errors: str) -> "ValidationResult":
