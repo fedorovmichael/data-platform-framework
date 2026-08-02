@@ -28,4 +28,4 @@ class SparkRuntime(Runtime):
         try:
             pipeline.run(context)
         finally:
-            spark.stop
+            spark.stop()

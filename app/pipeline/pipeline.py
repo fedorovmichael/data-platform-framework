@@ -3,7 +3,7 @@ from typing import Generic, TypeVar
 
 from app.execution.execution_context import ExecutionContext
 from app.sources.source_base import Source
-from app.validators.validator_base import Validator, ValidationResult
+from app.validators.validator_base import Validator 
 from app.transformers.transform_base import Transformer
 from app.sinks.sink_base import Sink
 

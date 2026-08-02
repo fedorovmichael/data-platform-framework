@@ -39,7 +39,6 @@ class PipelineBuilder:
         return component_class(**options)
 
     def build(self, config: dict[str, Any]) -> PipelineExecution:
-
         runtime = self._build_component(config["runtime"], RUNTIME_REGISTRY, "runtime")
 
         source = self._build_component(config["source"], SOURCE_REGISTRY, "source")

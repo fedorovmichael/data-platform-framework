@@ -1,4 +1,4 @@
-from  dataclasses import dataclass
+from dataclasses import dataclass
 
 from app.pipeline.pipeline_base import PipelineBase
 from app.runtime.runtime_base import Runtime

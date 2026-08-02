@@ -10,8 +10,8 @@ from app.sources.source_base import Source
 class CsvSparkSource(Source[DataFrame]):
     def __init__(self, path: str) -> None:
 
-        if path is None:
-            raise ValueError("CSV path is required.")
+        if not isinstance(path, str) or not path.strip():
+            raise ValueError("CSV path must be a non-empty string.")
 
         self.csv_path = Path(__file__).parent.parent.parent / path
 
