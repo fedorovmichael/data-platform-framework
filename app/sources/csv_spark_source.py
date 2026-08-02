@@ -1,7 +1,10 @@
-from app.sources.source_base import Source
-from pyspark.sql import SparkSession, DataFrame
 from pathlib import Path
-from app.runtime.spark_runtime import SparkRuntime
+from typing import cast
+
+from pyspark.sql import SparkSession, DataFrame
+
+from app.execution.execution_context import ExecutionContext
+from app.sources.source_base import Source
 
 
 class CsvSparkSource(Source[DataFrame]):
@@ -10,12 +13,11 @@ class CsvSparkSource(Source[DataFrame]):
         if path is None:
             raise ValueError("CSV path is required.")
 
-        spark = SparkRuntime()
-        self.spark = spark.start()
-
         self.csv_path = Path(__file__).parent.parent.parent / path
 
-    def read(self) -> DataFrame:
+    def read(self, context: ExecutionContext) -> DataFrame:
         path = str(self.csv_path)
-        df = self.spark.read.csv(path, header=True, inferSchema=True)
-        return df
+
+        spark = cast(SparkSession, context.get_resource("spark"))
+
+        return spark.read.csv(path, header=True, inferSchema=True)

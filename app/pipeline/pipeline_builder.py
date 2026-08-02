@@ -1,14 +1,15 @@
 from collections.abc import Mapping
 from typing import Any, TypeVar
-from enum import Enum
 
 from app.pipeline.pipeline import Pipeline
+from app.execution.pipeline_execution import PipelineExecution
 
 from app.registry import (
     SINK_REGISTRY,
     SOURCE_REGISTRY,
     VALIDATOR_REGISTRY,
     TRANSFORMER_REGISTRY,
+    RUNTIME_REGISTRY,
 )
 
 T = TypeVar("T")
@@ -37,7 +38,10 @@ class PipelineBuilder:
 
         return component_class(**options)
 
-    def build(self, config: dict[str, Any]) -> Pipeline:
+    def build(self, config: dict[str, Any]) -> PipelineExecution:
+
+        runtime = self._build_component(config["runtime"], RUNTIME_REGISTRY, "runtime")
+
         source = self._build_component(config["source"], SOURCE_REGISTRY, "source")
 
         validator = self._build_component(
@@ -50,6 +54,8 @@ class PipelineBuilder:
 
         sink = self._build_component(config["sink"], SINK_REGISTRY, "sink")
 
-        return Pipeline(
+        pipeline = Pipeline(
             source=source, validator=validator, transformer=transformer, sink=sink
         )
+
+        return PipelineExecution(runtime=runtime, pipeline=pipeline)

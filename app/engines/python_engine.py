@@ -10,9 +10,10 @@ def main():
 
     for name, config in pipeline_configs.items():
         print(f"Running pipeline: {name}")
-        pipeline = builder.build(config=config)
-        pipeline.run()
+        
+        execution = builder.build(config)
+        execution.run()
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     main()
