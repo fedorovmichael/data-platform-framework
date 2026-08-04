@@ -54,7 +54,6 @@ def test_load_multiple_pipelines(tmp_path):
     )
 
     result = load_pipeline_configs(tmp_path)
-    print(f"result: {result}")
     assert "orders_pipeline" in result
     assert "users_pipeline" in result
     assert result["orders_pipeline"]["name"] == "orders_pipeline"
