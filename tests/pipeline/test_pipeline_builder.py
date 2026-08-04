@@ -28,8 +28,10 @@ def test_build_component_rejects_unknown_type():
 
     component_config = {"type": "fake_resource1", "options": {"path": "users.csv"}}
 
-    with pytest.raises(ValueError):
-        component = PipelineBuilder._build_component(
+    with pytest.raises(
+        ValueError, match="Unknown fake_resource type 'fake_resource1'."
+    ):
+        PipelineBuilder._build_component(
             component_config=component_config,
             registry=registry,
             component_name="fake_resource",
@@ -43,7 +45,7 @@ def test_build_component_rejects_invalid_options():
     component_config = {"type": "fake_resource", "options": "path"}
 
     with pytest.raises(ValueError):
-        component = PipelineBuilder._build_component(
+        PipelineBuilder._build_component(
             component_config=component_config,
             registry=registry,
             component_name="fake_resource",
@@ -68,5 +70,23 @@ def test_build_component_rejects_invalid_type(component_type):
         PipelineBuilder._build_component(
             component_config=component_config,
             registry=registry,
+            component_name="source",
+        )
+
+
+def test_build_component_rejects_missing_type():
+    component_config = {
+        "options": {
+            "path": "users.csv",
+        },
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="source configuration must contain a non-empty 'type'",
+    ):
+        PipelineBuilder._build_component(
+            component_config=component_config,
+            registry={"fake_source": FakeSource},
             component_name="source",
         )
