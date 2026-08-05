@@ -1,29 +1,43 @@
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from app.runtime.spark_runtime import SparkRuntime
 
 
-def test_spark_runtime_initializes_successfully():
+@patch("app.runtime.spark_runtime.SparkSession")
+def test_spark_runtime_runs_pipeline(mock_spark_session) -> None:
+    spark = MagicMock()
+    mock_spark_session.builder.master.return_value.appName.return_value.getOrCreate.return_value = (
+        spark
+    )
+
+    pipeline = MagicMock()
+    runtime = SparkRuntime(app_name="test-app", master="local[1]")
+
+    runtime.run(pipeline)
+
+    pipeline.run.assert_called_once()
+
+    context = pipeline.run.call_args.args[0]
+
+    assert context.get_resource("spark") is spark
+    spark.stop.assert_called_once_with()
+
+
+@patch("app.runtime.spark_runtime.SparkSession")
+def test_spark_runtime_stops_spark_when_pipeline_fails(mock_spark_session) -> None:
+    spark = MagicMock()
+    mock_spark_session.builder.master.return_value.appName.return_value.getOrCreate.return_value = (
+        spark
+    )
+
+    pipeline = MagicMock()
+    pipeline.run.side_effect = RuntimeError("Pipeline failed")
+
     runtime = SparkRuntime()
-    try:
-        spark = runtime.start()
 
-        assert spark is not None
-        assert runtime.spark is spark
-    finally:
-        runtime.stop()
+    with pytest.raises(RuntimeError, match="Pipeline failed"):
+        runtime.run(pipeline)
 
-
-def test_stop_without_start_does_not_raise():
-    runtime = SparkRuntime()
-
-    runtime.stop()
-
-    assert runtime.spark is None
-
-
-def test_stop_clears_spark_session():
-    runtime = SparkRuntime()
-    runtime.start()
-
-    runtime.stop()
-
-    assert runtime.spark is None
+    spark.stop.assert_called_once_with()
