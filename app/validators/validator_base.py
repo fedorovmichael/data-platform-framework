@@ -19,7 +19,7 @@ class ValidationResult:
 
     @classmethod
     def ok(cls) -> "ValidationResult":
-        return cls(is_valid=True, errors=[])
+        return cls(is_valid=True)
 
     @classmethod
     def fail(cls, *errors: ValidationError) -> "ValidationResult":
