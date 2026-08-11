@@ -1,7 +1,7 @@
 from .validator_base import Validator, ValidationResult
 from pyspark.sql import DataFrame
 from .user_name_not_null_validator import UserNameNotNullValidator
-from .user_email_not_null_validator import UserEmailNotNullOrEmptyValidator
+from .user_email_not_null_or_empty_validator import UserEmailNotNullOrEmptyValidator
 
 
 class CompositeValidator(Validator[DataFrame]):
