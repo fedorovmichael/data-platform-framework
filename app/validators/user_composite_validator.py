@@ -20,6 +20,6 @@ class CompositeValidator(Validator[DataFrame]):
                 user_email_not_null_result.errors + user_name_not_null_result.errors
             )
 
-            return ValidationResult(is_valid=False, errors=errors)
+            return ValidationResult.fail(*errors)
 
         return ValidationResult.ok()
