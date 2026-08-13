@@ -26,7 +26,7 @@ def test_one_validator_fails(spark):
     assert validator_result.errors[0].rule == "user_name_not_null_or_empty"
 
 
-def test_all_validators_fails(spark):
+def test_all_validators_fail(spark):
     data = [(1, "", "alice@example.com"), (2, "bob", "")]
     df = spark.createDataFrame(data, ["id", "username", "email"])
 
