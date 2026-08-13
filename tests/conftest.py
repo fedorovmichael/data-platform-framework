@@ -1,17 +1,19 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from app.runtime.spark_runtime import SparkRuntime
+from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="session")
 def spark():
-    runtime = SparkRuntime()
-    spark = runtime.start()
+    spark = (
+        SparkSession.builder.master("local[2]")
+        .appName("SparkTest")
+        .getOrCreate()
+    )
     yield spark
 
-    runtime.stop()
+    spark.stop()
 
 @pytest.fixture
 def mocked_spark():
