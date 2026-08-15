@@ -9,7 +9,7 @@
     }
   },
   "validator": { "type": "spark_user_composit_validation" },
-  "transformation": { "type": "spark_upper_username" },
+  "transformation": { "type": "spark_user_composit_transformer" },
   "sink": {
     "type": "parquet",
     "options": {

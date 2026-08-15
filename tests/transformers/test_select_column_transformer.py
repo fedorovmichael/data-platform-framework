@@ -1,5 +1,5 @@
 import pytest
-from app.transformers.select_columns_transform import SelectColumnsTransform
+from app.transformers.select_columns_transformer import SelectColumnsTransform
 
 file_name = "select_columns_users.csv"
 csv_data = "id,name,sex\n1,Michael,m\n2,Anna,f\n3,Nina,f\n4,Valera,m\n5,Nicol,f\n"
