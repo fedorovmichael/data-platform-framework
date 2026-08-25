@@ -4,6 +4,7 @@ from typing import Any
 
 @dataclass(slots=True)
 class ExecutionContext:
+    execution_id: str
     resources: dict[str, Any]
 
     def get_resource(self, name: str) -> Any:

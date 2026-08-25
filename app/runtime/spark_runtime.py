@@ -12,7 +12,7 @@ class SparkRuntime(Runtime):
         self.app_name = app_name
         self.master = master
 
-    def run(self, pipeline: PipelineBase) -> None:
+    def run(self, pipeline: PipelineBase, execution_id: str) -> None:
         spark = (
             SparkSession.builder.master(self.master)
             .appName(self.app_name)
@@ -20,6 +20,7 @@ class SparkRuntime(Runtime):
         )
 
         context = ExecutionContext(
+            execution_id=execution_id,
             resources={
                 "spark": spark,
             }
