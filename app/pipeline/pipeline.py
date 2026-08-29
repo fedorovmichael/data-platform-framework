@@ -35,13 +35,13 @@ class Pipeline(PipelineBase, Generic[TIn, TOut]):
             logger.info("execution_id=%s Source read started", context.execution_id)
             source_result = self.source.read(context)
             logger.info("execution_id=%s Source read completed", context.execution_id)
-        except Exception as e:
+        except Exception as exc:
             raise ExecutionEntityError(
                 PipelineEntityTypes.SOURCE.value,
                 context.execution_id,
                 "Source read failed",
-                e,
-            ) from e
+                exc,
+            ) from exc
 
         try:
             logger.info("execution_id=%s Validation started", context.execution_id)

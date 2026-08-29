@@ -72,7 +72,7 @@ def test_pipeline_stops_when_validation_fails(spark_context) -> None:
     sink.write.assert_not_called()
 
 
-def test_pipeline_source_executioin_error(spark_context) -> None:
+def test_pipeline_source_execution_error(spark_context) -> None:
 
     source = MagicMock(spec=Source)
     validator = MagicMock(spec=Validator)
@@ -98,6 +98,7 @@ def test_pipeline_source_executioin_error(spark_context) -> None:
     assert error.message == "Source read failed"
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Source read failed"
+    assert error.__cause__ is error.cause
 
 
 def test_pipeline_validator_execution_error(spark_context) -> None:
@@ -126,6 +127,7 @@ def test_pipeline_validator_execution_error(spark_context) -> None:
     assert error.message == "Validation failed"
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Validator validation failed"
+    assert error.__cause__ is error.cause
 
 
 def test_pipeline_transformer_execution_error(spark_context) -> None:
@@ -154,6 +156,7 @@ def test_pipeline_transformer_execution_error(spark_context) -> None:
     assert error.message == "Transformer failed"
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Transformer transform failed"
+    assert error.__cause__ is error.cause
 
 
 def test_pipeline_sink_execution_error(spark_context) -> None:
@@ -182,3 +185,4 @@ def test_pipeline_sink_execution_error(spark_context) -> None:
     assert error.message == "Sink failed"
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Sink write failed"
+    assert error.__cause__ is error.cause
