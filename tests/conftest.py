@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from pyspark.sql import SparkSession
+from uuid import uuid4
 
 from app.execution.execution_context import ExecutionContext
 
@@ -29,6 +30,7 @@ def mocked_spark():
 @pytest.fixture
 def spark_context(spark):
     context = ExecutionContext(
+        execution_id = str(uuid4()),
         resources={
             "spark": spark,
         }
