@@ -99,6 +99,9 @@ def test_pipeline_source_execution_error(spark_context) -> None:
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Source read failed"
     assert error.__cause__ is error.cause
+    validator.validate.assert_not_called()
+    transformer.transform.assert_not_called()
+    sink.write.assert_not_called()
 
 
 def test_pipeline_validator_execution_error(spark_context) -> None:
@@ -128,6 +131,8 @@ def test_pipeline_validator_execution_error(spark_context) -> None:
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Validator validation failed"
     assert error.__cause__ is error.cause
+    transformer.transform.assert_not_called()
+    sink.write.assert_not_called()
 
 
 def test_pipeline_transformer_execution_error(spark_context) -> None:
@@ -157,6 +162,7 @@ def test_pipeline_transformer_execution_error(spark_context) -> None:
     assert isinstance(error.cause, RuntimeError)
     assert str(error.cause) == "Transformer transform failed"
     assert error.__cause__ is error.cause
+    sink.write.assert_not_called()
 
 
 def test_pipeline_sink_execution_error(spark_context) -> None:
