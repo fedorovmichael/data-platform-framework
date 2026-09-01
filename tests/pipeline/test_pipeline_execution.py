@@ -25,6 +25,10 @@ def test_pipeline_execution_success_status():
     execution.run()
 
     assert execution.status == ExecutionStatus.SUCCESS
+    runtime.run.assert_called_once_with(
+        pipeline,
+        execution.execution_id,
+    )
 
 
 def test_pipeline_execution_failed_status():
@@ -39,7 +43,10 @@ def test_pipeline_execution_failed_status():
         execution.run()
 
     assert execution.status == ExecutionStatus.FAILED
-
+    runtime.run.assert_called_once_with(
+        pipeline,
+        execution.execution_id,
+    )
 
 def test_pipeline_execution_unique_execution_id():
     pipeline = MagicMock(spec=PipelineBase)
