@@ -48,6 +48,7 @@ def test_pipeline_execution_failed_status():
         execution.execution_id,
     )
 
+
 def test_pipeline_execution_unique_execution_id():
     pipeline = MagicMock(spec=PipelineBase)
     runtime = MagicMock(spec=Runtime)
@@ -56,6 +57,7 @@ def test_pipeline_execution_unique_execution_id():
     execution2 = PipelineExecution("test_pipeline_execution1", runtime, pipeline)
 
     assert execution1.execution_id != execution2.execution_id
+
 
 def test_pipeline_execution_rejects_invalid_max_attempts():
     pipeline = MagicMock(spec=PipelineBase)
@@ -69,14 +71,12 @@ def test_pipeline_execution_rejects_invalid_max_attempts():
             max_attempts=0,
         )
 
+
 def test_pipeline_execution_succeeds_after_retry():
     pipeline = MagicMock(spec=PipelineBase)
     runtime = MagicMock(spec=Runtime)
 
-    runtime.run.side_effect = [
-        RuntimeError("Runtime failed"),
-        None
-    ]
+    runtime.run.side_effect = [RuntimeError("Runtime failed"), None]
 
     execution = PipelineExecution(
         "test_pipeline",
@@ -89,6 +89,10 @@ def test_pipeline_execution_succeeds_after_retry():
 
     assert execution.status == ExecutionStatus.SUCCESS
     assert runtime.run.call_count == 2
+    runtime.run.assert_called_with(
+        pipeline,
+        execution.execution_id,
+    )
 
 
 def test_pipeline_execution_fails_after_max_attempts():
