@@ -15,9 +15,14 @@ class PipelineExecution:
     name: str
     runtime: Runtime
     pipeline: PipelineBase
+    max_attempts: int = 1
 
     execution_id: str = field(default_factory=lambda: str(uuid4()), init=False)
     status: ExecutionStatus = field(default=ExecutionStatus.PENDING, init=False)
+
+    def __post_init__(self) -> None:
+        if self.max_attempts < 1:
+            raise ValueError("max_attempts must be at least 1")
 
     def run(self) -> None:
         self.status = ExecutionStatus.RUNNING
@@ -30,7 +35,21 @@ class PipelineExecution:
                 self.name,
             )
 
-            self.runtime.run(self.pipeline, self.execution_id)
+            for attempt in range(1, self.max_attempts + 1):
+                try:
+                    logger.info(
+                        "execution_id=%s Pipeline %s attempt=%s/%s",
+                        self.execution_id,
+                        self.name,
+                        attempt,
+                        self.max_attempts,
+                    )
+
+                    self.runtime.run(self.pipeline, self.execution_id)
+                    break
+                except Exception:
+                    if attempt == self.max_attempts:
+                        raise
 
             duration_ms = (time.perf_counter() - start_time) * 1000
             self.status = ExecutionStatus.SUCCESS

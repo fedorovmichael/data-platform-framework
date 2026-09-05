@@ -56,3 +56,15 @@ def test_pipeline_execution_unique_execution_id():
     execution2 = PipelineExecution("test_pipeline_execution1", runtime, pipeline)
 
     assert execution1.execution_id != execution2.execution_id
+
+def test_pipeline_execution_rejects_invalid_max_attempts():
+    pipeline = MagicMock(spec=PipelineBase)
+    runtime = MagicMock(spec=Runtime)
+
+    with pytest.raises(ValueError, match="max_attempts must be at least 1"):
+        PipelineExecution(
+            "test_pipeline",
+            runtime,
+            pipeline,
+            max_attempts=0,
+        )
