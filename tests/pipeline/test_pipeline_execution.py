@@ -68,3 +68,48 @@ def test_pipeline_execution_rejects_invalid_max_attempts():
             pipeline,
             max_attempts=0,
         )
+
+def test_pipeline_execution_succeeds_after_retry():
+    pipeline = MagicMock(spec=PipelineBase)
+    runtime = MagicMock(spec=Runtime)
+
+    runtime.run.side_effect = [
+        RuntimeError("Runtime failed"),
+        None
+    ]
+
+    execution = PipelineExecution(
+        "test_pipeline",
+        runtime,
+        pipeline,
+        max_attempts=2,
+    )
+
+    execution.run()
+
+    assert execution.status == ExecutionStatus.SUCCESS
+    assert runtime.run.call_count == 2
+
+
+def test_pipeline_execution_fails_after_max_attempts():
+    pipeline = MagicMock(spec=PipelineBase)
+    runtime = MagicMock(spec=Runtime)
+
+    runtime.run.side_effect = [
+        RuntimeError("Attempt 1 failed"),
+        RuntimeError("Attempt 2 failed"),
+        RuntimeError("Attempt 3 failed"),
+    ]
+
+    execution = PipelineExecution(
+        "test_pipeline",
+        runtime,
+        pipeline,
+        max_attempts=3,
+    )
+
+    with pytest.raises(RuntimeError, match="Attempt 3 failed"):
+        execution.run()
+
+    assert execution.status == ExecutionStatus.FAILED
+    assert runtime.run.call_count == 3
