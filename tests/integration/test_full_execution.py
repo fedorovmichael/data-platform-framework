@@ -20,8 +20,8 @@ def test_csv_to_parquet_pipeline(tmp_path):
     }
 
     builder = PipelineBuilder()
-    execusion = builder.build(config["name"], config)
+    execution = builder.build(config["name"], config)
 
-    execusion.run()
+    execution.run()
 
     assert output_path.exists()

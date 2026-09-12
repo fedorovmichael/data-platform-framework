@@ -37,6 +37,6 @@ def test_initialization_without_spark_raises_error(tmp_path):
     with pytest.raises(ValueError, match="SparkSession is required."):
        source.read(context) 
     
-def test_initialization_without_csv_path_raises_error():
+def test_read_without_spark_raises_error():
     with pytest.raises(ValueError, match="CSV path must be a non-empty string."):
         CsvSparkSource(path=None)
