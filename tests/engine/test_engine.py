@@ -9,12 +9,12 @@ def test_engine(mock_load_config, mock_pipeline_builder):
     config = {"name": "test_pipeline"}
     fake_execution = Mock()
 
-    mock_load_config.return_value = [config]
+    mock_load_config.return_value = {"test_pipeline": config}
     builder_instance = mock_pipeline_builder.return_value
     builder_instance.build.return_value = fake_execution
 
     main()
 
     mock_load_config.assert_called_once()
-    builder_instance.build.assert_called_once_with(config)
+    builder_instance.build.assert_called_once_with("test_pipeline", config)
     fake_execution.run.assert_called_once()

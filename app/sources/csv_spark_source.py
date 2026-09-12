@@ -20,4 +20,7 @@ class CsvSparkSource(Source[DataFrame]):
 
         spark = cast(SparkSession, context.get_resource("spark"))
 
+        if spark is None:
+            raise ValueError("SparkSession is required.")
+
         return spark.read.csv(path, header=True, inferSchema=True)

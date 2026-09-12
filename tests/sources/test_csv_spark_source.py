@@ -1,5 +1,6 @@
 import pytest
 from app.sources.csv_spark_source import CsvSparkSource
+from app.execution.execution_context import ExecutionContext
 from pyspark.sql import DataFrame
 
 
@@ -10,20 +11,32 @@ def test_read_returns_dataframe(spark, tmp_path):
         encoding="utf-8",
     )
 
-    source = CsvSparkSource(spark=spark, csv_path=str(csv_path))
+    source = CsvSparkSource(path=str(csv_path))
 
-    dataframe = source.read()
+    context = ExecutionContext(
+        execution_id="test_execution_id",
+        resources={"spark": spark},
+    )
+
+    dataframe = source.read(context)
 
     assert isinstance(dataframe, DataFrame)
     assert dataframe.count() == 2
     assert dataframe.columns == ["id", "name"]
 
 
-def test_initialization_without_spark_raises_error():
-    with pytest.raises(ValueError, match="SparkSession is required."):
-        CsvSparkSource(spark=None, csv_path="users.csv")
+def test_initialization_without_spark_raises_error(tmp_path):
+    csv_path = tmp_path / "users.csv"
+    source = CsvSparkSource(path=str(csv_path))
 
+    context = ExecutionContext(
+        execution_id="test_execution_id",
+        resources={"spark": None},
+    )
+
+    with pytest.raises(ValueError, match="SparkSession is required."):
+       source.read(context) 
     
-def test_initialization_without_csv_path_raises_error(spark):
-    with pytest.raises(ValueError, match="CSV path is required."):
-        CsvSparkSource(spark=spark, csv_path=None)
+def test_initialization_without_csv_path_raises_error():
+    with pytest.raises(ValueError, match="CSV path must be a non-empty string."):
+        CsvSparkSource(path=None)
