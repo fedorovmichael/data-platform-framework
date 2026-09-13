@@ -8,7 +8,7 @@
       "path": "data/users.csv"
     }
   },
-  "validator": [
+  "validators": [
     { "type": "spark_username_null_empty" },
     { "type": "spark_email_null_empty" }
   ],
