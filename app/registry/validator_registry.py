@@ -1,7 +1,10 @@
+from app.validators.validator_base import Validator
 from app.validators.user_name_not_null_validator import UserNameNotNullValidator
-from app.validators.user_composite_validator import CompositeValidator
+from app.validators.user_email_not_null_or_empty_validator import UserEmailNotNullOrEmptyValidator
+from .registry_base import EntityRegistry
 
-VALIDATOR_REGISTRY = {
-    "spark_username_null_empty": UserNameNotNullValidator,
-    "spark_user_composit_validation": CompositeValidator,
-}
+
+validator_registry = EntityRegistry[Validator]()
+
+validator_registry.register("spark_username_null_empty", UserNameNotNullValidator)
+validator_registry.register("spark_email_null_empty", UserEmailNotNullOrEmptyValidator)

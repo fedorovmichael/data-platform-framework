@@ -3,11 +3,11 @@ from typing import Any, TypeVar
 
 from app.pipeline.pipeline import Pipeline
 from app.execution.pipeline_execution import PipelineExecution
+from app.validators.validator_builder import ValidatorBuilder
 
 from app.registry import (
     SINK_REGISTRY,
     SOURCE_REGISTRY,
-    VALIDATOR_REGISTRY,
     TRANSFORMER_REGISTRY,
     RUNTIME_REGISTRY,
 )
@@ -16,6 +16,9 @@ T = TypeVar("T")
 
 
 class PipelineBuilder:
+    def __init__(self) -> None:
+        self.validator_builder = ValidatorBuilder()
+
     @staticmethod
     def _build_component(
         component_config: dict[str, Any],
@@ -43,9 +46,7 @@ class PipelineBuilder:
 
         source = self._build_component(config["source"], SOURCE_REGISTRY, "source")
 
-        validator = self._build_component(
-            config["validator"], VALIDATOR_REGISTRY, "validator"
-        )
+        validator = self.validator_builder.build(config.get("validators", []))
 
         transformer = self._build_component(
             config["transformation"], TRANSFORMER_REGISTRY, "transformation"

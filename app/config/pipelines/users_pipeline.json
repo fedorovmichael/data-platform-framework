@@ -8,7 +8,10 @@
       "path": "data/users.csv"
     }
   },
-  "validator": { "type": "spark_user_composit_validation" },
+  "validator": [
+    { "type": "spark_username_null_empty" },
+    { "type": "spark_email_null_empty" }
+  ],
   "transformation": { "type": "spark_user_composit_transformer" },
   "sink": {
     "type": "parquet",
