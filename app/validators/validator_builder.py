@@ -5,6 +5,9 @@ from app.registry.validator_registry import validator_registry
 
 class ValidatorBuilder:
     def build(self, configs: list[dict]) -> Validator:
+        if not configs:
+            raise ValueError("At least one validator must be configured")
+
         validators = [validator_registry.create(config["type"]) for config in configs]
 
         if len(validators) == 1:
