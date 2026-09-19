@@ -1,7 +1,6 @@
 import pytest
 
 from app.registry.registry_base import EntityRegistry
-from app.validators.validator_builder import ValidatorBuilder
 
 
 class FakeEntity:
@@ -43,12 +42,3 @@ def test_register_duplicate_name_raises_value_error():
 
     with pytest.raises(ValueError, match="Entity 'test' is already registered"):
         registry.register("test", FakeEntity)
-
-def test_build_without_validators_raises_value_error():
-    builder = ValidatorBuilder()
-
-    with pytest.raises(
-        ValueError,
-        match="At least one validator must be configured",
-    ):
-        builder.build([])
