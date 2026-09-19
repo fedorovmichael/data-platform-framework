@@ -11,15 +11,18 @@ def main():
     configure_logging()
 
     logger.info("Engine started")
+    try:
+        pipeline_configs = load_pipeline_configs()
+        builder = PipelineBuilder()
 
-    pipeline_configs = load_pipeline_configs()
-    builder = PipelineBuilder()
+        for name, config in pipeline_configs.items():
+            execution = builder.build(name, config)
+            execution.run()
 
-    for name, config in pipeline_configs.items():
-        execution = builder.build(name, config)
-        execution.run()
-
-    logger.info("Engine finished successfully")
+        logger.info("Engine finished successfully")
+    except Exception:
+        logger.exception("Engine failed")
+        raise
 
 
 if __name__ == "__main__":
