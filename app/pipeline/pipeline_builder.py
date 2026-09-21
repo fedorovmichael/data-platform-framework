@@ -5,9 +5,9 @@ from app.pipeline.pipeline import Pipeline
 from app.execution.pipeline_execution import PipelineExecution
 from app.validators.validator_builder import ValidatorBuilder
 from app.sources.source_builder import SourceBuilder
+from app.sinks.sink_builder import SinkBuilder
 
 from app.registry import (
-    SINK_REGISTRY,
     TRANSFORMER_REGISTRY,
     RUNTIME_REGISTRY,
 )
@@ -19,6 +19,7 @@ class PipelineBuilder:
     def __init__(self) -> None:
         self.validator_builder = ValidatorBuilder()
         self.source_builder = SourceBuilder()
+        self.sink_builder = SinkBuilder()
 
     @staticmethod
     def _build_component(
@@ -53,7 +54,7 @@ class PipelineBuilder:
             config["transformation"], TRANSFORMER_REGISTRY, "transformation"
         )
 
-        sink = self._build_component(config["sink"], SINK_REGISTRY, "sink")
+        sink = self.sink_builder.build(config.get("sink"))
 
         pipeline = Pipeline(
             source=source, validator=validator, transformer=transformer, sink=sink

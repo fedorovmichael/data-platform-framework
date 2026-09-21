@@ -1,5 +1,7 @@
-from app.sinks.sink_parquet import SinkParquet
+from .registry_base import EntityRegistry
 
-SINK_REGISTRY = {
-    "parquet": SinkParquet
-}
+from app.sinks.sink_parquet import SinkParquet
+from app.sinks.sink_base import Sink
+
+sink_registry = EntityRegistry[Sink]()
+sink_registry.register("parquet", SinkParquet)
