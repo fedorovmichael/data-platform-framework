@@ -9,7 +9,7 @@ class TransformBuilder:
             raise ValueError("At least one transformer must be configured")
 
         transformers = [
-            transformer_registry.create(config["type"], **config.get("options", {}))
+            transformer_registry.create(config.get("type"), **config.get("options", {}))
             for config in configs
         ]
 
