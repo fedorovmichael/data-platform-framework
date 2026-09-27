@@ -14,6 +14,6 @@ class CompositeTransform(Transformer[DataFrame, DataFrame]):
         result = data
 
         for transformer in self.transformers:
-            result = transformer.transform(data)
+            result = transformer.transform(result)
 
         return result 
