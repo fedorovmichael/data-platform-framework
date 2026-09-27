@@ -12,7 +12,17 @@
     { "type": "spark_username_null_empty" },
     { "type": "spark_email_null_empty" }
   ],
-  "transformation": { "type": "spark_user_composit_transformer" },
+  "transformation": [
+    { "type": "spark_upper_username" },
+    {
+      "type": "spark_select_columns",
+      "options": { "columns": ["id", "username"] }
+    },
+    { 
+      "type": "spark_filter_rows", 
+      "options": { "condition": "id > 1" }
+    }
+  ],
   "sink": {
     "type": "parquet",
     "options": {
