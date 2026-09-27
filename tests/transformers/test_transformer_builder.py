@@ -3,7 +3,6 @@ import pytest
 from app.transformers.transform_builder import TransformBuilder
 from app.transformers.composite_transform import CompositeTransform
 from app.transformers.select_columns_transformer import SelectColumnsTransform
-from app.transformers.upper_case_name_transformer import UpperCaseNameTransformer
 from app.transformers.filter_rows_transformer import FilterRowsTransform
 
 
