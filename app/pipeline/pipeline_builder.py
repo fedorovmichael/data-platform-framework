@@ -1,4 +1,3 @@
-from collections.abc import Mapping
 from typing import Any, TypeVar
 
 from app.pipeline.pipeline import Pipeline
@@ -7,10 +6,7 @@ from app.validators.validator_builder import ValidatorBuilder
 from app.sources.source_builder import SourceBuilder
 from app.sinks.sink_builder import SinkBuilder
 from app.transformers.transform_builder import TransformBuilder
-
-from app.registry import (
-    RUNTIME_REGISTRY,
-)
+from app.runtime.runtime_builder import RuntimeBuilder
 
 T = TypeVar("T")
 
@@ -21,31 +17,10 @@ class PipelineBuilder:
         self.source_builder = SourceBuilder()
         self.sink_builder = SinkBuilder()
         self.transform_builder = TransformBuilder()
-
-    @staticmethod
-    def _build_component(
-        component_config: dict[str, Any],
-        registry: Mapping[str, type[T]],
-        component_name: str,
-    ) -> T:
-        component_type = component_config.get("type")
-        if not isinstance(component_type, str) or not component_type:
-            raise ValueError(
-                f"{component_name} configuration must contain a non-empty 'type'."
-            )
-
-        component_class = registry.get(component_type)
-        if component_class is None:
-            raise ValueError(f"Unknown {component_name} type '{component_type}'.")
-
-        options = component_config.get("options", {})
-        if not isinstance(options, dict):
-            raise ValueError(f"{component_name} options must be an object.")
-
-        return component_class(**options)
+        self.runtime_builder = RuntimeBuilder()
 
     def build(self, name: str, config: dict[str, Any]) -> PipelineExecution:
-        runtime = self._build_component(config["runtime"], RUNTIME_REGISTRY, "runtime")
+        runtime = self.runtime_builder.build(config.get("runtime"))
 
         source = self.source_builder.build(config.get("source"))
 
