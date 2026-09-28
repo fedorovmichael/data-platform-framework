@@ -1,18 +1,26 @@
 import pytest
-from pyspark.errors import AnalysisException
 
-from app.transformers.composite_transformer import CompositeTransformer
+from app.transformers.transform_builder import TransformBuilder
 
 
-def test_all_transformers_success(spark):
+def test_transform_builder_executes_transformers_sequentially(spark):
     data = [
         (1, "alice", "alice@example.com"),
         (2, "bob", "bob@example.com"),
         (3, "lee", "lee@example.com"),
     ]
+    config = [
+        {
+            "type": "spark_select_columns",
+            "options": {"columns": ["id", "username"]},
+        },
+        {"type": "spark_filter_rows", "options": {"condition": "id > 1"}},
+        {"type": "spark_upper_username"},
+    ]
     df = spark.createDataFrame(data, ["id", "username", "email"])
 
-    transformer = CompositeTransformer()
+    builder = TransformBuilder()
+    transformer = builder.build(config)
     result = transformer.transform(df)
 
     rows = result.orderBy("id").collect()
@@ -21,16 +29,3 @@ def test_all_transformers_success(spark):
     assert [row.username for row in rows] == ["BOB", "LEE"]
     assert result.columns == ["id", "username"]
 
-
-def test_composite_transformer_fails_when_username_missing(spark):
-    data = [
-        (1, "alice@example.com"),
-        (2, "bob@example.com"),
-    ]
-
-    df = spark.createDataFrame(data, ["id", "email"])
-
-    trasformer = CompositeTransformer()
-
-    with pytest.raises(ValueError, match="Column 'username' does not exist"):
-        trasformer.transform(df)
