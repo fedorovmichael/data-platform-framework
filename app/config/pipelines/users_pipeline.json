@@ -18,8 +18,8 @@
       "type": "spark_select_columns",
       "options": { "columns": ["id", "username"] }
     },
-    { 
-      "type": "spark_filter_rows", 
+    {
+      "type": "spark_filter_rows",
       "options": { "condition": "id > 1" }
     }
   ],
@@ -29,4 +29,4 @@
       "path": "data/output/users.parquet"
     }
   }
-}
+ }

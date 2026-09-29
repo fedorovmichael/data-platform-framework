@@ -1,5 +1,7 @@
 import logging
 
+from dotenv import load_dotenv
+
 from app.config.config import load_pipeline_configs
 from app.pipeline.pipeline_builder import PipelineBuilder
 from app.log.logging_config import configure_logging
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
+    load_dotenv()
     configure_logging()
 
     logger.info("Engine started")
