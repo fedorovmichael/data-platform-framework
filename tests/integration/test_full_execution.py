@@ -14,8 +14,8 @@ def test_csv_to_parquet_pipeline(tmp_path):
         "runtime": {"type": "spark"},
         "enabled": True,
         "source": {"type": "csv_spark", "options": {"path": str(input_path)}},
-        "validator": {"type": "spark_username_null_empty"},
-        "transformation": {"type": "spark_upper_username"},
+        "validators": [{"type": "spark_username_null_empty"}],
+        "transformation": [{"type": "spark_upper_username"}],
         "sink": {"type": "parquet", "options": {"path": str(output_path)}},
     }
 

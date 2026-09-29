@@ -1,4 +1,4 @@
-from typing import Any, TypeVar
+from typing import Any
 
 from app.pipeline.pipeline import Pipeline
 from app.execution.pipeline_execution import PipelineExecution
@@ -7,8 +7,6 @@ from app.sources.source_builder import SourceBuilder
 from app.sinks.sink_builder import SinkBuilder
 from app.transformers.transform_builder import TransformBuilder
 from app.runtime.runtime_builder import RuntimeBuilder
-
-T = TypeVar("T")
 
 
 class PipelineBuilder:
