@@ -5,8 +5,6 @@ T = TypeVar("T")
 
 
 class CredentialsProvider(ABC, Generic[T]):
-    ...
-
     @abstractmethod
-    def get(self) -> T:
+    def get(self) -> T: 
         ...

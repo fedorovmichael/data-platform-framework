@@ -3,5 +3,5 @@ from .source_base import Source
 
 
 class PostgresSparkSource(Source[DataFrame]):
-    def __init__(host: str, port: int, database: str, table: str):
+    def __init__(self, host: str, port: int, database: str, table: str):
         ...
