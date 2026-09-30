@@ -1,12 +1,24 @@
-from app.registry.credential_registry import credentials_provider_registry, credentials_type_registry 
-
-credentials_type = credentials_type_registry.get("postgres")
-provider = credentials_provider_registry.create(
-    "env",
-    values={
-        "user": "POSTGRES1_USER",
-        "password": "POSTGRES1_PASSWORD",
-    },
-    credentials_type=credentials_type,
+from app.registry.credential_registry import (
+    credentials_provider_registry,
+    credentials_type_registry,
 )
-credentials = provider.get()
+
+
+class CredentialsResolver:
+    def resolve(self, config: dict):
+        if not config.get("provider"):
+            raise ValueError("The provider should be supplied.")
+
+        if not config.get("type"):
+            raise ValueError("The type should be supplied.")
+
+        if not config.get("values"):
+            raise ValueError("The values should be supplied.")
+
+        credentials_type = credentials_type_registry.get(config["type"])
+        provider = credentials_provider_registry.create(
+            config["provider"],
+            values=config["values"],
+            credentials_type=credentials_type,
+        )
+        return provider.get()
