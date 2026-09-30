@@ -12,8 +12,11 @@ class EntityRegistry(Generic[T]):
             raise ValueError(f"Entity '{name}' is already registered")
         self._entities[name] = entity
 
-    def create(self, name: str, **kwargs) -> T:
+    def get(self, name: str) -> type[T]:
         if name not in self._entities:
             raise ValueError(f"Unknown registry entity '{name}'")
-        entity_class = self._entities[name]
+        return self._entities[name]
+
+    def create(self, name: str, **kwargs) -> T:
+        entity_class = self.get(name)
         return entity_class(**kwargs)

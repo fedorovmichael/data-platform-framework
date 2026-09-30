@@ -42,3 +42,12 @@ def test_register_duplicate_name_raises_value_error():
 
     with pytest.raises(ValueError, match="Entity 'test' is already registered"):
         registry.register("test", FakeEntity)
+
+
+def test_get_unknown_entity_raises_value_error():
+    registry = EntityRegistry()
+
+    registry.register("test", FakeEntity)
+
+    with pytest.raises(ValueError, match="Unknown registry entity 'test1'"):
+        registry.get("test1")
