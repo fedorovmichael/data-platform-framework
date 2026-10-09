@@ -16,6 +16,10 @@ class SparkRuntime(Runtime):
         spark = (
             SparkSession.builder.master(self.master)
             .appName(self.app_name)
+            .config(
+                "spark.jars.packages",
+                "org.postgresql:postgresql:42.7.8",
+            )
             .getOrCreate()
         )
 
@@ -23,7 +27,7 @@ class SparkRuntime(Runtime):
             execution_id=execution_id,
             resources={
                 "spark": spark,
-            }
+            },
         )
 
         try:

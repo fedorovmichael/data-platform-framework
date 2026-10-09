@@ -1,7 +1,7 @@
 {
   "name": "user_pipeline",
   "runtime": { "type": "spark" },
-  "enabled": true,
+  "enabled": false,
   "source": {
     "type": "csv_spark",
     "options": {

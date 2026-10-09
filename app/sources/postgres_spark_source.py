@@ -24,11 +24,13 @@ class PostgresSparkSource(Source[DataFrame]):
 
     def read(self, context: ExecutionContext) -> DataFrame:
         spark = cast(SparkSession, context.get_resource("spark"))
-        return spark.createDataFrame(
-            [
-                (1, "alice", "alice@test.com"),
-                (2, "bob", "bob@test.com"),
-                (3, "charlie", "charlie@test.com"),
-            ],
-            ["id", "username", "email"],
+        return (
+            spark.read
+            .format("jdbc")
+            .option("url", f"jdbc:postgresql://{self._host}:{self._port}/{self._database}")
+            .option("dbtable", self._table)
+            .option("user", self._credentials.user)
+            .option("password", self._credentials.password)
+            .option("driver", "org.postgresql.Driver")
+            .load()
         )
