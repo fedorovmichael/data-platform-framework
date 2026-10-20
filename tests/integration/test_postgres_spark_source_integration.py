@@ -7,6 +7,7 @@ from pyspark.sql import DataFrame
 
 def test_postgres_source_reads_real_data(spark_context, postgres_test_table):
 
+    table_name, _ = postgres_test_table
     credentials = PostgresCredentials(
         user=os.environ["POSTGRES_TEST_USER"],
         password=os.environ["POSTGRES_TEST_PASSWORD"],
@@ -16,7 +17,7 @@ def test_postgres_source_reads_real_data(spark_context, postgres_test_table):
         host=os.environ["POSTGRES_TEST_HOST"],
         port=int(os.getenv("POSTGRES_TEST_PORT", "5432")),
         database=os.environ["POSTGRES_TEST_DB"],
-        table=postgres_test_table,
+        table=table_name,
         credentials=credentials,
     )
 

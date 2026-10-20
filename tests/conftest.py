@@ -8,8 +8,16 @@ from pyspark.sql import SparkSession
 from uuid import uuid4
 from dotenv import load_dotenv
 from app.execution.execution_context import ExecutionContext
+from app.sinks.sink_postgres import SinkSparkPostgres
+from app.sources.postgres_spark_source import PostgresCredentials
 
 load_dotenv()
+
+_host = os.environ["POSTGRES_TEST_HOST"]
+_port = int(os.getenv("POSTGRES_TEST_PORT", "5432"))
+_dbname = os.environ["POSTGRES_TEST_DB"]
+_user = os.environ["POSTGRES_TEST_USER"]
+_password = os.environ["POSTGRES_TEST_PASSWORD"]
 
 
 @pytest.fixture(scope="session")
@@ -33,9 +41,9 @@ def mocked_spark():
     with patch("app.runtime.spark_runtime.SparkSession") as mock_spark_session:
         spark = MagicMock()
 
-        mock_spark_session.builder.master.return_value.appName.return_value.getOrCreate.return_value = (
-            spark
-        )
+        (
+            mock_spark_session.builder.master.return_value.appName.return_value.config.return_value.getOrCreate.return_value
+        ) = spark
 
         yield spark
 
@@ -55,11 +63,11 @@ def spark_context(spark):
 @pytest.fixture
 def postgres_test_table():
     conn = psycopg.connect(
-        host=os.environ["POSTGRES_TEST_HOST"],
-        port=int(os.getenv("POSTGRES_TEST_PORT", "5432")),
-        dbname=os.environ["POSTGRES_TEST_DB"],
-        user=os.environ["POSTGRES_TEST_USER"],
-        password=os.environ["POSTGRES_TEST_PASSWORD"],
+        host=_host,
+        port=_port,
+        dbname=_dbname,
+        user=_user,
+        password=_password,
     )
 
     try:
@@ -84,7 +92,7 @@ def postgres_test_table():
                 ],
             )
         conn.commit()
-        yield "integration_test_users"
+        yield "integration_test_users", conn
 
     finally:
         conn.rollback()
@@ -94,3 +102,18 @@ def postgres_test_table():
 
         conn.commit()
         conn.close()
+
+
+@pytest.fixture
+def postgres_sink():
+    def create_sink(mode: str = "append") -> SinkSparkPostgres:
+        return SinkSparkPostgres(
+            host=_host,
+            port=_port,
+            database=_dbname,
+            table="integration_test_users",
+            credentials=PostgresCredentials(_user, _password),
+            mode=mode,
+        )
+
+    return create_sink
