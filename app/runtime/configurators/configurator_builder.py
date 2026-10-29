@@ -13,7 +13,7 @@ class SparkConfiguratorBuilder:
         credentials_config = options.pop("credentials", None)
 
         if credentials_config:
-            credentials = CredentialsResolver.resolve(credentials_config)
+            credentials = CredentialsResolver().resolve(credentials_config)
             options["credentials"] = credentials
 
         return spark_configurator_registry.create(

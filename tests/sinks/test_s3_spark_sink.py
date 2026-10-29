@@ -18,7 +18,7 @@ def test_s3_sink_invalid_path(path):
         S3SparkSink(bucket="data-platform", path=path)
 
 
-def test_s3_sink_normallizes_path():
+def test_s3_sink_normalizes_path():
     sink = S3SparkSink(
         bucket="data-platform",
         path="/output/users/",
