@@ -1,6 +1,6 @@
 from app.registry.runtime_registry import spark_configurator_registry 
 from app.credentials.credentials_resolver import CredentialsResolver
-from app.runtime.configurators.configurator_builder import SparkConfigurator
+from app.runtime.configurators.configurator_base import SparkConfigurator
 
 
 class SparkConfiguratorBuilder:

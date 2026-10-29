@@ -11,7 +11,7 @@ class S3AConfigurator(SparkConfigurator):
     def configure(self, spark: SparkSession)-> None:
         hadoop_conf = spark.sparkContext._jsc.hadoopConfiguration()
 
-        hadoop_conf.set("fs.s3a.endpoint", self.endpoint)
+        hadoop_conf.set("fs.s3a.endpoint", self._endpoint)
         hadoop_conf.set(
             "fs.s3a.access.key",
             self._credentials.access_key,

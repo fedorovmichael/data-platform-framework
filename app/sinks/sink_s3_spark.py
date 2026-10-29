@@ -8,9 +8,15 @@ class S3SparkSink(Sink[DataFrame]):
         bucket: str,
         path: str,
         format: str = "parquet",
-        mode: str = WriteMode("append"),
+        mode: str = WriteMode.APPEND.value,
         partition_by: list[str] | None = None,
     ) -> None:
+        if not isinstance(bucket, str) or not bucket.strip():
+            raise ValueError("S3 bucket must be a non-empty string.")
+
+        if not isinstance(path, str) or not path.strip("/").strip():
+            raise ValueError("S3 path must be a non-empty string.")
+
         self._bucket = bucket
         self._path = path
         self._format = format
