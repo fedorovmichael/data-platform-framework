@@ -1,15 +1,7 @@
-from enum import Enum
 from pyspark.sql import DataFrame
 
-from app.sinks.sink_base import Sink
+from app.sinks.sink_base import Sink, WriteMode
 from app.credentials.dataclasses.postgres_credentials import PostgresCredentials
-
-
-class WriteMode(str, Enum):
-    APPEND = "append"
-    OVERWRITE = "overwrite"
-    IGNORE = "ignore"
-    ERROR_IF_EXISTS = "errorifexists"
 
 class SinkSparkPostgres(Sink[DataFrame]):
     def __init__(

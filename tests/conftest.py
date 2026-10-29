@@ -27,7 +27,12 @@ def spark():
         .appName("SparkTest")
         .config(
             "spark.jars.packages",
-            "org.postgresql:postgresql:42.7.8",
+            ",".join(
+                [
+                    "org.postgresql:postgresql:42.7.8",
+                    "org.apache.hadoop:hadoop-aws:3.5.0",
+                ]
+            ),
         )
         .getOrCreate()
     )
