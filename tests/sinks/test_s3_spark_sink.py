@@ -30,7 +30,7 @@ def test_s3_sink_normalizes_path():
     assert sink._path == "output/users"
 
 
-def test_s3_sink_write_paramas():
+def test_s3_sink_write_with_partitions():
     df = MagicMock(spec=DataFrame)
 
     writer = MagicMock()
@@ -74,4 +74,7 @@ def test_s3_sink_write_without_partitions():
 
     sink.write(df)
 
+    writer.format.assert_called_once_with("parquet")
+    writer.mode.assert_called_once_with("append")
     writer.partitionBy.assert_not_called()
+    writer.save.assert_called_once_with("s3a://data-platform/output/users")
