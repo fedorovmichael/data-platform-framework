@@ -1,5 +1,8 @@
 import pytest
 
+from unittest.mock import MagicMock
+from pyspark.sql import DataFrame
+
 from app.sinks.sink_s3_spark import S3SparkSink
 
 
@@ -25,3 +28,50 @@ def test_s3_sink_normalizes_path():
     )
 
     assert sink._path == "output/users"
+
+
+def test_s3_sink_write_paramas():
+    df = MagicMock(spec=DataFrame)
+
+    writer = MagicMock()
+    writer.format.return_value = writer
+    writer.mode.return_value = writer
+    writer.partitionBy.return_value = writer
+
+    df.write = writer
+
+    sink = S3SparkSink(
+        bucket="data-platform",
+        path="output/users",
+        format="parquet",
+        mode="append",
+        partition_by=["year", "month"],
+    )
+
+    sink.write(df)
+
+    writer.format.assert_called_once_with("parquet")
+    writer.mode.assert_called_once_with("append")
+    writer.partitionBy.assert_called_once_with("year", "month")
+    writer.save.assert_called_once_with("s3a://data-platform/output/users")
+
+
+
+def test_s3_sink_write_without_partitions():
+    df = MagicMock(spec=DataFrame)
+
+    writer = MagicMock()
+    writer.format.return_value = writer
+    writer.mode.return_value = writer
+    writer.partitionBy.return_value = writer
+
+    df.write = writer
+
+    sink = S3SparkSink(
+        bucket="data-platform",
+        path="output/users",
+    )
+
+    sink.write(df)
+
+    writer.partitionBy.assert_not_called()
