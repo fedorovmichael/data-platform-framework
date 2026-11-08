@@ -9,7 +9,9 @@ from uuid import uuid4
 from dotenv import load_dotenv
 from app.execution.execution_context import ExecutionContext
 from app.sinks.sink_postgres import SinkSparkPostgres
+from app.sources.postgres_spark_source import PostgresSparkSource
 from app.sources.postgres_spark_source import PostgresCredentials
+from app.runtime.configurators.s3a_configurator import SparkConfigurator
 
 load_dotenv()
 
@@ -63,6 +65,22 @@ def spark_context(spark):
     )
 
     yield context
+
+
+@pytest.fixture
+def spark_context_with_config(spark):
+    def spark_with_config(configurator: SparkConfigurator) -> ExecutionContext:
+
+        configurator.configure(spark)
+
+        return ExecutionContext(
+            execution_id=str(uuid4()),
+            resources={
+                "spark": spark,
+            },
+        )
+
+    yield spark_with_config
 
 
 @pytest.fixture
@@ -122,3 +140,17 @@ def postgres_sink():
         )
 
     return create_sink
+
+
+@pytest.fixture
+def postgres_source():
+    def create_source() -> PostgresSparkSource:
+        return PostgresSparkSource(
+            host=_host,
+            port=_port,
+            database=_dbname,
+            table="integration_test_users",
+            credentials=PostgresCredentials(_user, _password),
+        )
+
+    return create_source
