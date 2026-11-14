@@ -22,11 +22,13 @@ _user = os.environ["POSTGRES_TEST_USER"]
 _password = os.environ["POSTGRES_TEST_PASSWORD"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def spark():
     spark = (
         SparkSession.builder.master("local[2]")
         .appName("SparkTest")
+        .config("spark.driver.memory", "2g")
+        .config("spark.sql.shuffle.partitions", "2")
         .config(
             "spark.jars.packages",
             ",".join(
@@ -38,6 +40,7 @@ def spark():
         )
         .getOrCreate()
     )
+
     yield spark
 
     spark.stop()
